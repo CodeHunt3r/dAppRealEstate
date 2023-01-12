@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // We require the Hardhat Runtime Environment explicitly here. This is optional
 // but useful for running the script in a standalone fashion through `node <script>`.
 //
@@ -13,6 +14,7 @@ const tokens = (n) => {
 
 async function main() {
   //Setup accounts 
+  // eslint-disable-next-line no-undef
   [buyer, seller, inspector, lender] = await ethers.getSigners();
 
   //Deploy Real
@@ -38,6 +40,8 @@ async function main() {
   );
 
   await escrow.deployed();
+
+  console.log(`Deployed Escrow Contract at: ${escrow.address}`)
 
   for (let i = 0; i < 3; i++) {
     // Approve properties

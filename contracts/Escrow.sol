@@ -32,6 +32,7 @@ contract Escrow {
         _;
     }
     
+    //mapping (Key / Value )
     mapping(uint256 => bool) public isListed;
     mapping(uint256 => uint256) public purchasePrice;
     mapping(uint256 => uint256) public escrowAmount;
@@ -53,6 +54,7 @@ contract Escrow {
         lender = _lender;
     }
 
+    //Can only be called by seller
     function list(
         uint256 _nftID, 
         address _buyer, 
