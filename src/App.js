@@ -20,6 +20,9 @@ function App() {
 
   const [account, setAccount] = useState(null)
   const [homes, setHomes] = useState(null)
+  const [home, setHome] = useState(null)
+  const [toggle, setToggle] = useState(false)
+
 
 
 
@@ -27,10 +30,13 @@ function App() {
     const provider = new ethers.providers.Web3Provider(window.ethereum)
     setProvider(provider)
     const network = await provider.getNetwork()
+    console.log(network)
 
     const realEstate = new ethers.Contract(config[network.chainId].realEstate.address, RealEstate, provider)
+    console.log(realEstate)
     const totalSupply = await realEstate.totalSupply()
     const homes = []
+
 
     for (var i = 1; i <= totalSupply; i++) {
       const uri = await realEstate.tokenURI(i)
@@ -40,6 +46,7 @@ function App() {
     }
     setHomes(homes)
     console.log(homes)
+
 
 
     const escrow = new ethers.Contract(config[network.chainId].escrow.address, Escrow, provider)
@@ -58,7 +65,14 @@ function App() {
   }, [])
 
 
+  const toggleProp = (home) => {
+    setHome(home)
+    toggle ? setToggle(false) : setToggle(true)
+
+  }
+
   return (
+
     <div>
 
       <Navigation account={account} setAccount={setAccount} />
@@ -70,7 +84,7 @@ function App() {
 
         <div className='cards'>
           {homes.map((home, index) => (
-            <div className='card' key={index}>
+            <div className='card' key={index} onClick={() => toggleProp(home)}>
               <div className='card__image'>
                 <img src={home.image} alt='Home' />
               </div>
@@ -86,11 +100,13 @@ function App() {
               </div>
             </div>
           ))}
-
-
         </div>
 
       </div>
+
+      {toggle && (
+        <Home home={home} provider={provider} account={account} escrow={escrow} toggleProp={toggleProp} />
+      )}
 
     </div>
   );
